@@ -3,8 +3,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define PI 3.141592653589793238 // First 20 digits of PI
-#define INFIX 1 //1 for infix notation, 2 for postfix notation (RPN)
 int errorcode = 0;
 char errormsg[64];
 
