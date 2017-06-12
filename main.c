@@ -189,7 +189,7 @@ int parse(char* string) {
             pp++;
         } else if (isOperator == 1) {
             char opc[] = {op, '\0'};
-            while (otoi(stack[top]) != -1 && (associativity[otoi(opc)] == 'L' && (precedence[otoi(opc)] <= precedence[otoi(stack[top])])) || (associativity[otoi(opc)] == 'R' && (precedence[otoi(opc)] < precedence[otoi(stack[top])]))) {
+            while (((otoi(stack[top]) != -1) && (associativity[otoi(opc)] == 'L' && (precedence[otoi(opc)] <= precedence[otoi(stack[top])]))) || (associativity[otoi(opc)] == 'R' && (precedence[otoi(opc)] < precedence[otoi(stack[top])]))) {
                 strcpy(tpostfix[pp], stack[top]);
                 //printf("OPR[%i]: %s\n", i, tpostfix[pp]);
                 pp++;
@@ -199,11 +199,11 @@ int parse(char* string) {
             strcpy(stack[top], infix[i]);
             //printf("STK[%i]: %s\n", top, stack[top]);
 
-        } else if (token == "(") {
+        } else if (strcmp(token, "(") == 0) {
             top++;
             strcpy(stack[top], token);
-        } else if (token == ")") {
-            while (stack[top] != "(") {
+        } else if (strcmp(token, ")") == 0) {
+            while (strcmp(token, "(") != 0) {
                 strcpy(tpostfix[pp], stack[top]);
                 pp++;
                 top--;
@@ -332,7 +332,7 @@ int main(int argc, char const *argv[]) {
         if (input == NULL) {
             exit(1);
         }
-        if (input != "" && input != NULL) {
+        if (strcmp(input, "") != 0 && input != NULL) {
             float res = parse(input);
             if (errorcode == 0) {
                 if ((res - (int)res) > 0) {
