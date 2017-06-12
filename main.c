@@ -329,7 +329,10 @@ int main(int argc, char const *argv[]) {
         } else {
             char* input = readIn("$> ");
         }*/
+
         char* input = readIn("$> ");
+        strtok(input, "\n");
+
         if (input == NULL) {
             exit(1);
         }
