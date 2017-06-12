@@ -9,6 +9,7 @@ char errormsg[64];
 struct argdb {
     bool silent;
 };
+
 struct argdb args;
 
 float add(float x, float y) { //Addition function
