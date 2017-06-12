@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define PI "3.1415926535"
+
 int errorcode = 0;
 char errormsg[64];
 
@@ -85,7 +87,34 @@ int otoi(char* op) {
         }
 }
 
-int parse(char* string) {
+void str_replace(char *target, const char *pattern, const char *replacement) {
+    char buffer[1024] = { 0 };
+    char *insert = &buffer[0];
+    const char *tmp = target;
+    int pattern_len = strlen(pattern);
+    int repl_len = strlen(replacement);
+
+    while (1) {
+        const char *p = strstr(tmp, pattern);
+        if (p == NULL) {
+            strcpy(insert, tmp);
+            break;
+        }
+
+        memcpy(insert, tmp, p - tmp);
+        insert += p - tmp;
+
+        memcpy(insert, replacement, repl_len);
+        insert += repl_len;
+
+        tmp = p + pattern_len;
+    }
+
+    strcpy(target, buffer);
+}
+
+float parse(char* string) {
+
     /* What follows is a terrible implementation of the Shunting-yard algorithm */
     int precedence[] = {2, 2, 3, 3, 4}; //Operator precedence in order of function declaration above
     char operators[] = {'+', '-', '*', '/', '^'};
@@ -93,10 +122,12 @@ int parse(char* string) {
     char exclude[] = {'(', ')'};
 
     //printf("Creating IB\n");
-    char inputb[strlen(string)]; //Create an input buffer
+    char inputb[strlen(string) * 2]; //Create an input buffer
 
     //printf("Copying...\n");
     strcpy(inputb, string);
+
+    str_replace(inputb, "pi", PI);
 
     //printf("Searching for operators...\n");
     int ops = 0;
@@ -165,7 +196,7 @@ int parse(char* string) {
     int top = 0;
 
     //printf("Creating POSTFIX\n");
-    char tpostfix[inp+1][strlen(string)+ops];
+    char tpostfix[inp+128][strlen(string)+ops];
     int pp = 0;
 
     for (size_t i = 0; i < inp; i++) {
@@ -200,11 +231,11 @@ int parse(char* string) {
             strcpy(stack[top], infix[i]);
             //printf("STK[%i]: %s\n", top, stack[top]);
 
-        } else if (strcmp(token, "(") == 0) {
+        } else if (strcmp(token, "(") == 0) { // parenthesis are broken
             top++;
             strcpy(stack[top], token);
         } else if (strcmp(token, ")") == 0) {
-            while (strcmp(token, "(") != 0) {
+            while (strcmp(stack[top], "(") != 0) {
                 strcpy(tpostfix[pp], stack[top]);
                 pp++;
                 top--;
