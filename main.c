@@ -333,7 +333,7 @@ int main(int argc, char const *argv[]) {
         if (input == NULL) {
             exit(1);
         }
-        if (strcmp(input, "") != 0 && input != NULL) {
+        if (strcmp(input, "") != 0) {
             float res = parse(input);
             if (errorcode == 0) {
                 if ((res - (int)res) > 0) {
